@@ -7,6 +7,13 @@ FROM prescriber;
 Select * 
 FROM Prescription;
 
+SELECT 
+npi,
+SUM(total_claim_count) AS total_claim
+FROM prescription
+GROUP BY 1
+ORDER BY total_claim DESC;
+
 SELECT
 npi
 total_claim_count
@@ -72,3 +79,26 @@ ORDER BY SUM(p1.total_claim_count) DESC;
 
 SELECT *
 FROM drug;
+
+-- 3. a. Which drug (generic_name) had the highest total drug cost?
+-- Insulin Glargine,HUM.REC.ANLOG
+
+SELECT d.generic_name, SUM(p1.total_drug_cost) AS drug_cost
+FROM prescription AS p1
+LEFT JOIN drug AS d
+ON d.drug_name = p1.drug_name
+GROUP BY d.generic_name
+ORDER BY drug_cost DESC;
+
+--  b. Which drug (generic_name) has the hightest total cost per day?
+LEDIPASVIR
+
+SELECT d.generic_name, ROUND(SUM(p1.total_drug_cost / p1.total_day_supply)) AS daily_drug_cost
+FROM prescription AS p1
+LEFT JOIN drug AS d
+ON d.drug_name = p1.drug_name
+GROUP BY d.generic_name
+ORDER BY daily_drug_cost DESC;
+
+SELECT *
+FROM prescription;
