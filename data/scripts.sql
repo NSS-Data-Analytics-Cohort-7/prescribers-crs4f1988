@@ -102,3 +102,11 @@ ORDER BY daily_drug_cost DESC;
 
 SELECT *
 FROM prescription;
+
+-- 4. a. For each drug in the drug table, return the drug name and then a column named 'drug_type' which says 'opioid' for drugs which have opioid_drug_flag = 'Y', says 'antibiotic' for those drugs which have antibiotic_drug_flag = 'Y', and says 'neither' for all other drugs.
+
+SELECT drug_name,
+CASE WHEN opioid_drug_flag = 'Y' THEN 'opioid'
+WHEN antibiotic_drug_flag = 'Y' THEN 'antibiotic'
+ELSE 'Neither' END AS drug_type
+FROM drug;
