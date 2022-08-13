@@ -43,12 +43,32 @@ GROUP BY p1.npi, p2.nppes_provider_first_name, p2.nppes_provider_last_org_name, 
 ORDER BY total_claim_count DESC;
 
 -- 2. a. Which specialty had the most total number of claims (totaled over all drugs)?
+-- 9752347
 
-Select p1.npi, p2.specialty_description, p1.total_claim_count, p1.drug_name
+Select p2.specialty_description, SUM(p1.total_claim_count)
 FROM prescription AS p1
 LEFT JOIN prescriber AS p2
-ON p1.npi = p2.npi
-GROUP BY p1.npi, p2.specialty_description, p1.total_claim_count, p1.drug_name
-ORDER BY total_claim_count DESC;
+ON p1.npi = p2.npi 
+GROUP BY p2.specialty_description
+ORDER BY SUM(p1.total_claim_count) DESC;
 
 -- 
+SELECT *
+FROM prescription
+ORDER BY npi;
+
+--     b. Which specialty had the most total number of claims for opioids?
+--Nurse Practitioner
+
+Select p2.specialty_description, SUM(p1.total_claim_count)
+FROM prescription AS p1
+LEFT JOIN prescriber AS p2
+ON p1.npi = p2.npi 
+LEFT JOIN drug AS d
+ON p1.drug_name = d.drug_name
+WHERE d.opioid_drug_flag = 'Y'
+GROUP BY p2.specialty_description
+ORDER BY SUM(p1.total_claim_count) DESC;
+
+SELECT *
+FROM drug;
